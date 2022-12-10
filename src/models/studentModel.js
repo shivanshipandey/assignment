@@ -2,12 +2,12 @@ const mongoose = require('mongoose')
 const ObjectId = mongoose.Schema.Types.ObjectId
  
 const studentSchema = new mongoose.Schema({
-    StudentName : {
+    studentName : {
         type : String,
         required : true
     },
     subject : {
-        type : String,
+        type : [String],
         enum : ["Maths", "English", "Hindi"],
         required : true
     },
@@ -19,6 +19,10 @@ const studentSchema = new mongoose.Schema({
         type : ObjectId,
         ref: "teacher",
         required : true
+    },
+    isDeleted : {
+        type : Boolean,
+        default : false
     }
 },
 {timesetamps : true})
