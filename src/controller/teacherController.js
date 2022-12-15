@@ -1,6 +1,6 @@
 const teacherModel = require('../models/teacherModel')
 const jwt = require('jsonwebtoken')
-
+const bcrypt = require('bcrypt')
 
 //=====================> REGISTRATION OF TEACHER <==========================//
 
@@ -30,6 +30,8 @@ const registration = async function (req, res) {
         if (!password) {
             return res.status(400).send({ status: false, message: "password is mandatory" })
         }
+
+        data.password = await bcrypt.hash(password, 10)
 
         let passCheck = await teacherModel.findOne({ password })
         if (passCheck) {
@@ -71,10 +73,13 @@ const loginTeacher = async function (req, res) {
             return res.status(400).send({ status: false, message: "Password is not correct" })
         }
 
-        let check = await teacherModel.findOne({ email: email, password: password })
+        let check = await teacherModel.findOne({ email: email})
         if (!check) {
             return res.status(400).send({ status: false, message: "these credentials aren't present in database" })
         }
+
+        let checkpassword = await bcrypt.compare(password, check.password);
+        if (!checkpassword) return res.status(400).send({ status: false, message: "login failed this password not matches with name" })
 
         let token = jwt.sign(
             {

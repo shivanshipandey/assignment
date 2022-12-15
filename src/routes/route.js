@@ -9,14 +9,14 @@ route.post('/register', teacherController.registration)
 
 route.post('/login', teacherController.loginTeacher)
 
-route.post('/student/register',middleware.authentication,studentController.createStudent)
+route.post('/student/:userId',middleware.authentication,middleware.authorization, studentController.createStudent)
 
-route.get('/student/:userId', middleware.authentication,studentController.studentData)
+route.get('/student/:userId',studentController.studentData)
 
-route.get('/getDetails', middleware.authentication,studentController.getStudentData)
+route.get('/getDetails',studentController.getStudentData)
 
-route.put('/editStudents/:userId', middleware.authentication,middleware.authorization,studentController.editStudent)
+route.put('/editStudents/:userId/:studentId', middleware.authentication,middleware.authorization,studentController.editStudent)
 
-route.delete('/deleteStudent/:studentId', middleware.authentication,middleware.authorization,studentController.deleteStudent)
+route.delete('/deleteStudent/:userId/:studentId', middleware.authentication,middleware.authorization,studentController.deleteStudent)
 
 module.exports = route

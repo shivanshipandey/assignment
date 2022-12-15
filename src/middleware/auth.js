@@ -25,17 +25,18 @@ const authentication = async function (req, res, next) {
 const authorization = async function (req, res, next) {
 
     try {
-        let userid = req.params.userid
-        if (!Objectid(userid)) {
+        let userId = req.params.userId
+        
+        if (!Objectid(userId)) {
             return res.status(400).send({ status: false, message: " PLEASE ENTER CORRECT mongoose USER ID" })
         }
 
-        const findUseridInDb = await teacherModel.findById(userid)
-        if (!findUseridInDb) {
-            return res.status(404).send({ status: false, message: `there is no data with this  ${userid}  id in database` })
+        const finduserIdInDb = await teacherModel.findById(userId)
+        if (!finduserIdInDb) {
+            return res.status(404).send({ status: false, message: `there is no data with this  ${userId}  id in database` })
         }
 
-        if (req.token.id != userid) return res.status(403).send({ status: false, message: "authorization failed,userid and token are not of the same user" })
+        if (finduserIdInDb.userId != req.token.id) return res.status(403).send({ status: false, message: "authorization failed,userId and token are not of the same user" })
         next()
 
     } catch (err) {
